@@ -1,0 +1,32 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - "*.qmd"
+
+website:
+  title: "Multiverse Analysis in R"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+
+author: 
+  - name: "Giulia Calignano"
+    email: giulia.calignano@unipd.it
+    orcid: "0000-0002-2913-8770"
+    twitter: CalignanoGiulia
+  - name: "Filippo Gambarota"
+    email: filippo.gambarota@unipd.it
+    twitter: fgambarota
+    github: filippogambarota
+    orcid: "0000-0002-6666-1747"
+institute: "Department of Developmental Psychology and Socialization, University of Padova"
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
