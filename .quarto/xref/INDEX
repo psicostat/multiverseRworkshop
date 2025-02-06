@@ -4,5 +4,9 @@
   },
   "about.qmd": {
     "about.html": "3d06232a"
+  },
+  "materials/exploring-the-multiverse.qmd": {
+    "exploring-the-multiverse.html": "faa1aeed",
+    "exploring-the-multiverse.tex": "d39c71e3"
   }
 }

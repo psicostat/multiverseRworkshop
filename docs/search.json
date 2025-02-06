@@ -5,5 +5,117 @@
     "title": "multiverseRworkshop",
     "section": "",
     "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#why-exploring-is-important",
+    "href": "materials/exploring-the-multiverse.html#why-exploring-is-important",
+    "title": "Untitled",
+    "section": "Why exploring is important?",
+    "text": "Why exploring is important?\nA multiverse analysis increase the complexity of the data analysis. There is no longer a single dataset and result to discuss."
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#exploratory-tools",
+    "href": "materials/exploring-the-multiverse.html#exploratory-tools",
+    "title": "Untitled",
+    "section": "Exploratory tools",
+    "text": "Exploratory tools\n\nVulcano Plot and Vibration of Effects\nMarginal/Conditional effects\nSpecification Curve"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#vulcano-plot",
+    "href": "materials/exploring-the-multiverse.html#vulcano-plot",
+    "title": "Untitled",
+    "section": "Vulcano Plot",
+    "text": "Vulcano Plot"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#marginalconditional-effects",
+    "href": "materials/exploring-the-multiverse.html#marginalconditional-effects",
+    "title": "Untitled",
+    "section": "Marginal/Conditional effects",
+    "text": "Marginal/Conditional effects"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#specification-curve",
+    "href": "materials/exploring-the-multiverse.html#specification-curve",
+    "title": "Untitled",
+    "section": "Specification Curve",
+    "text": "Specification Curve"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#an-example",
+    "href": "materials/exploring-the-multiverse.html#an-example",
+    "title": "Untitled",
+    "section": "An example…",
+    "text": "An example…\nWith the phd dataset we conducted xx different analyses. In the previous examples, we were focused on the estimated effects and finding patters in the different specifications. Now we plot explore the p values:"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#we-have-some-significant-scenarios-great",
+    "href": "materials/exploring-the-multiverse.html#we-have-some-significant-scenarios-great",
+    "title": "Untitled",
+    "section": "We have some significant scenarios, Great!",
+    "text": "We have some significant scenarios, Great!"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#some-of-the-scenarios-are-significant",
+    "href": "materials/exploring-the-multiverse.html#some-of-the-scenarios-are-significant",
+    "title": "Untitled",
+    "section": "Some of the scenarios are significant!",
+    "text": "Some of the scenarios are significant!\nWe have some significant p values. This is a good sign that some of the specifications are detecting a signal.\n\nBut the data are simulated where the coefficient of the focal predictor is 0. Thus all the significant p values are false positives.\n\n\nExploring is dangerous if we do not take the inferential errors into account."
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#inferential-tools",
+    "href": "materials/exploring-the-multiverse.html#inferential-tools",
+    "title": "Untitled",
+    "section": "Inferential Tools",
+    "text": "Inferential Tools\n\nSpecification Curve\nPost-Selection Inference in Multiverse Analysis (PIMA)"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#specification-curve-1",
+    "href": "materials/exploring-the-multiverse.html#specification-curve-1",
+    "title": "Untitled",
+    "section": "Specification Curve",
+    "text": "Specification Curve"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#pima",
+    "href": "materials/exploring-the-multiverse.html#pima",
+    "title": "Untitled",
+    "section": "PIMA",
+    "text": "PIMA"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#intuition-of-the-specification-curve",
+    "href": "materials/exploring-the-multiverse.html#intuition-of-the-specification-curve",
+    "title": "Untitled",
+    "section": "Intuition of the Specification Curve",
+    "text": "Intuition of the Specification Curve"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#intuition-of-pima",
+    "href": "materials/exploring-the-multiverse.html#intuition-of-pima",
+    "title": "Untitled",
+    "section": "Intuition of PIMA",
+    "text": "Intuition of PIMA"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#vibration-of-effects",
+    "href": "materials/exploring-the-multiverse.html#vibration-of-effects",
+    "title": "Untitled",
+    "section": "Vibration of Effects",
+    "text": "Vibration of Effects"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#vulcano-plot-and-vibration-of-effects",
+    "href": "materials/exploring-the-multiverse.html#vulcano-plot-and-vibration-of-effects",
+    "title": "Untitled",
+    "section": "Vulcano Plot and Vibration of Effects",
+    "text": "Vulcano Plot and Vibration of Effects\n\nrelative hazard ratio (or effect size) and relative -log10pvalue"
+  },
+  {
+    "objectID": "materials/exploring-the-multiverse.html#an-example-statistics-and-math-anxiety",
+    "href": "materials/exploring-the-multiverse.html#an-example-statistics-and-math-anxiety",
+    "title": "Untitled",
+    "section": "An example, Statistics and Math Anxiety",
+    "text": "An example, Statistics and Math Anxiety"
   }
 ]
