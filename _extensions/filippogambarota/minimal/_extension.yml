@@ -1,0 +1,19 @@
+title: Minimal
+author: filippogambarota
+version: 1.0.0
+quarto-required: ">=1.5.0"
+contributes:
+  formats:
+    beamer:
+      include-in-header: header.tex
+      template-partials:
+      - after-body.tex
+      linkcolor: black
+      filecolor: linkcol
+      citecolor: linkcol
+      urlcolor: linkcol
+      toccolor: black
+      link-citations: true
+      toc-title: Contents
+      # filters:
+      #   - color-citations.lua

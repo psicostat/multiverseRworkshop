@@ -1,11 +1,34 @@
 ---
 title: "multiverseRworkshop"
+csl: files/apa-cv.csl
+bibliography: "https://raw.githubusercontent.com/filippogambarota/bib-database/main/references.bib"
+suppress-bibliography: true
 ---
 
-This is a Quarto website.
+This website contains the materials for the workshop about the **Multiverse Analysis in R**.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+## Materials
 
-```{r}
- |> 
-```
+- [A space travel into the multiverse](materials/space-travel-multiverse.qmd)
+
+## References
+
+This is an updated selection of papers about the multiverse analysis.
+
+- [@Calignano2023-sq]
+- [@Liu2021-uz]
+- [@Harder2020-zf]
+- [@Steegen2016-gx]
+- [@Del_Giudice2021-nm]
+- [@Girardi2024-ip]
+- [@Olsson-Collentine2023-sj]
+- [@Gotz2024-ov]
+- [@Patel2015-pn]
+- [@Klau2023-ri]
+
+## Packages
+
+- [livioivil/pima](https://github.com/livioivil/pima): package for the PIMA inferential framework *[under development]*
+- [livioivil/jointest](https://github.com/livioivil/jointest): the main PIMA dependency. Used to compute the multivariate permutation tests and combining p-values
+- [specr](https://masurp.github.io/specr/): main package for the specification curve analysis
+- [multiverse](https://cran.r-project.org/web/packages/multiverse/readme/README.html): package to create and execute a multiverse analysis using a complex and flexible tidyverse-style approach.

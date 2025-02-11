@@ -1,0 +1,59 @@
+%% PACKAGES ---------------------------------------------------------------------------------------------------------
+
+\usepackage{fontawesome5}
+\setbeamertemplate{frametitle continuation}[from second]
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+%% COMMANDS ---------------------------------------------------------------------------------------------------------
+
+% fixing the tables problem, thanks to https://github.com/quarto-dev/quarto-cli/issues/10019#issuecomment-2169284336
+%\newcommand{\theHtable}{\thetable}
+
+%% COLORS -----------------------------------------------------------------------------------------------------------
+
+\definecolor{linkcol}{HTML}{ff46a5}
+% Set all text colors to black
+\setbeamercolor{normal text}{fg=black}
+\setbeamercolor{frametitle}{fg=black}
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{subtitle}{fg=black}
+\setbeamercolor{author}{fg=black}
+\setbeamercolor{date}{fg=black}
+\setbeamercolor{block title}{fg=black}
+\setbeamercolor{block body}{fg=black}
+
+% Specific settings for section titles
+\setbeamercolor{section in toc}{fg=black}    % Section titles in table of             contents
+\setbeamercolor{section in head/foot}{fg=black, bg = black} % Section titles in             header/footer
+\setbeamercolor{section in sidebar}{fg=black}   % Section titles in sidebar
+% Use the following if section titles are displayed on separate frames:
+\setbeamercolor{section in toc shaded}{fg=black}
+\setbeamercolor{section title}{fg=white}
+\setbeamercolor{section in toc}{fg=black}
+
+\setbeamertemplate{itemize item}{\color{black}$\blacktriangleright$}
+\setbeamertemplate{itemize subitem}{\color{black}$\blacksquare$}
+\setbeamercolor{bibliography item}{fg=black}
+\setbeamercolor{bibliography entry author}{fg=black}
+\setbeamercolor{bibliography entry title}{fg=black}
+\setbeamercolor{bibliography entry location}{fg=black}
+\setbeamercolor{bibliography entry note}{fg=black}
+
+%% FONTS -----------------------------------------------------------------------------------------------------------
+
+% Make section titles have the same size and style as frame titles
+%\setbeamerfont{section title}{size=32pt,series=\bfseries} % Matches default frame title
+\setbeamerfont{section title}{size={\fontsize{19}{36}}, series=\bfseries}
+\setbeamerfont{frametitle}{size={\fontsize{16}{25}}, series=\bfseries}
+\setbeamerfont{title}{size={\fontsize{16}{25}}, series=\bfseries}
+
+\setbeamertemplate{section page}{
+    \vfill
+    {\usebeamerfont{section title}\insertsectionhead}\\
+    \vfill
+}
+
+\AtBeginSection{
+    \frame{\sectionpage}
+}

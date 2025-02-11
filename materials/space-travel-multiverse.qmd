@@ -1,0 +1,1418 @@
+---
+title: "A space travel into the Multiverse"
+subtitle: "Cognitive Science Arena"
+engine: knitr
+bibliography: "https://raw.githubusercontent.com/filippogambarota/bib-database/main/references.bib"
+csl: "https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl"
+link-citations: true
+date: 17/02/2024
+format:
+  minimal-beamer:
+    include-in-header:
+        - text: |
+            \setbeamercovered{transparent}
+    # incremental: false
+---
+
+```{r}
+#| include: false
+
+tex <- latex2exp::TeX
+library(tidyverse)
+library(here)
+library(ggplot2)
+library(formatR)
+library(viridis)
+library(patchwork)
+
+mtheme <- function(){
+    theme_minimal(20)
+}
+
+theme_set(mtheme())
+
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+
+#knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 20), tidy = TRUE)
+
+knitr::opts_chunk$set(size = "scriptsize", fig.align = "center")
+options(width = 70)
+
+# palettes
+options(ggplot2.continuous.colour="viridis")
+options(ggplot2.continuous.fill = "viridis")
+scale_colour_discrete <- scale_colour_viridis_d
+scale_fill_discrete <- scale_fill_viridis_d
+```
+
+# Exploratory Multiverse Analysis (EMA)
+
+## An example, Statistics and Math Anxiety
+
+@McCaughey2022-tb explored the relationship between self-efficacy anxiety sensitivity and perfectionism would be related to math/statistics anxiety controlling for gender, university program, and education level.
+
+We used the dataset available at [https://osf.io/nzhq6](https://osf.io/nzhq6/?view_only=).
+
+**We are going to do crazy stuff with this dataset that are not related to the original paper and research question! :)**
+
+## The big picture
+
+![](img/multi-big-picture.pdf)
+
+## Importing
+
+We did a little bit of pre-processing. The `ms_anxiety.rds` file contains the cleaned version of the original dataset.
+
+```{r}
+#| echo: true
+#| collapse: true
+#| size: scriptsize
+dat <- readRDS(here("data/ms_anxiety.rds"))
+vars <- names(dat)
+ys <- vars[grepl("^stat.anx|^math", vars)]
+ys
+
+xs <- vars[!vars %in% ys]
+xs
+```
+
+## Exploring
+
+Let's see the type of variables of the dataset:
+
+```{r}
+#| echo: true
+#| collapse: true
+sapply(dat[ys], class)
+sapply(dat[xs], class)
+```
+
+## Main research questions
+
+The main idea of the authors is predicting **math** and **statistics** anxiety with self-efficacy and perfectionism. In particular they pre-registered (see <https://osf.io/b3g7s>):
+
+1.  self-efficacy will be negatively related to math/statistics anxiety
+2.  anxiety sensitivity will be positively related to math/statistics anxiety.
+3.  self-critical perfectionism will be positively related to math/statistics anxiety.
+4.  the relationships described above will remain when statistically adjusting for gender, university program (arts vs. science) and student status (undergraduate vs. graduate).
+
+## Exploring the relationships
+
+```{r}
+xs_plot <- function(x, y, data, ylab){
+  data |>
+      select(starts_with(y), {{x}}) |>
+      pivot_longer(starts_with(y)) |>
+      ggplot(aes(x = {{x}}, y = value)) +
+      facet_wrap(~name) +
+      geom_point() +
+      geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+      ylab(ylab)
+}
+```
+
+```{r}
+xs_plot(self.efficacy, "stat.anx", dat, "Statistics Anxiety")
+```
+
+## Exploring the relationships
+
+```{r}
+xs_plot(frost.com, "stat.anx", dat, "Statistics Anxiety")
+```
+
+## Exploring the relationships
+
+```{r}
+xs_plot(frost.da, "stat.anx", dat, "Statistics Anxiety")
+```
+
+## Exploring the relationships
+
+```{r}
+xs_plot(asi, "stat.anx", dat, "Statistics Anxiety")
+```
+
+## Exploring the relationships
+
+```{r}
+dat |>
+  select(starts_with("stat.anx"), gender.category) |>
+  pivot_longer(starts_with("stat.anx")) |>
+  ggplot(aes(x = gender.category, y = value, fill = gender.category)) +
+  facet_wrap(~name) +
+  geom_boxplot(show.legend = FALSE) +
+  ylab("Statistics Anxiety")
+```
+
+## Exploring the relationships
+
+```{r}
+dat |>
+  select(starts_with("stat.anx"), faculty) |>
+  pivot_longer(starts_with("stat.anx")) |>
+  ggplot(aes(x = faculty, y = value, fill = faculty)) +
+  facet_wrap(~name) +
+  geom_boxplot(show.legend = FALSE) +
+  ylab("Statistics Anxiety")
+```
+
+## Exploring the relationships
+
+```{r}
+dat |>
+  select(starts_with("stat.anx"), program.type) |>
+  pivot_longer(starts_with("stat.anx")) |>
+  ggplot(aes(x = program.type, y = value, fill = program.type)) +
+  facet_wrap(~name) +
+  geom_boxplot(show.legend = FALSE) +
+  ylab("Statistics Anxiety")
+```
+
+## Exploring the relationships
+
+```{r}
+dat |>
+  select(all_of(xs[!xs %in% c("gender.category", "faculty", "program.type")]), math.anx) |>
+  pivot_longer(1:4) |>
+  ggplot(aes(y = math.anx, x = value)) +
+  facet_wrap(~name) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  theme(axis.title.x = element_blank())
+```
+
+## Exploring the relationships
+
+```{r}
+dat |>
+  select(all_of(xs[xs %in% c("gender.category", "faculty", "program.type")]), math.anx) |>
+  pivot_longer(1:3) |>
+  ggplot(aes(y = math.anx, x = value, fill = name)) +
+  facet_wrap(~name, scales = "free") +
+  geom_boxplot(show.legend = FALSE) +
+  theme(axis.title.x = element_blank())
+```
+
+## Selecting a sub-sample
+
+For the purpose of the example, we select a subsample of the dataset to increase the variability and simulate a more uncertain scenario with a lower sample size.
+
+```{r}
+#| eval: true
+#| echo: true
+
+set.seed(9386)
+N <- 200
+selected <- sample(1:nrow(dat), size = N, replace = FALSE)
+dat <- dat[selected, ]
+```
+
+## Data structure for specifications
+
+When conducting a multiverse in R (or in whatever language) the data structure is very important.
+
+-   how to create and organize the different models?
+-   how to easily extract all the informations such as coefficients, standard errors, p-values, etc.
+-   ...
+
+## An R `list` is probably the best
+
+A (named) `list` is flexible, easy to index and can be accesed by other functions to extract information and create other list.
+
+A `list` in R can be easily transformed into a `data.frame` for other models, plots, tables, etc.
+
+You can use the `*apply` family (`sapply`, `lapply`, etc.) to compute complex operations on lists.
+
+## An R `list` is probably the best
+
+For example, assuming that I have some regression models within a named list:
+
+```{r}
+#| echo: true
+fit1 <- lm(math.anx ~ gender.category + asi, data = dat)
+fit2 <- lm(math.anx ~ gender.category + asi + faculty, data = dat)
+fit3 <- lm(math.anx ~ gender.category + faculty, data = dat)
+fit4 <- lm(math.anx ~ gender.category + asi + program.type, data = dat)
+
+# ... and other thousands of (plausible) models :)
+
+mods <- list(fit1, fit2, fit3, fit4)
+names(mods) <- paste0("mod", 1:length(mods))
+```
+
+## An R `list` is probably the best
+
+Then, I want to extract all the `asi` coefficients and put into a data.frame:
+
+```{r}
+#| echo: true
+get_coef <- function(x, coef = NULL){
+  x <- broom::tidy(x, conf.int = TRUE)
+  if(!is.null(coef)){
+    filter(x, term %in% coef)
+  } else{
+    x
+  }
+}
+
+get_coef(mods$mod1, "asi")
+```
+
+## An R `list` is probably the best
+
+With `lapply` (or `purrr::map()`) and combining the results, you can easily create a nice dataframe with your coefficients:
+
+```{r}
+#| echo: true
+lapply(mods, get_coef, "asi") |> 
+  dplyr::bind_rows(.id = "mod")
+```
+
+## Creating the specifications
+
+There are multiple ways of creating the specifications in practice. You can do it from scratch:
+
+```{r}
+#| eval: false
+#| echo: true
+mod1 <- lm(y ~ x1 + x2)
+mod2 <- lm(y ~ log(x1) + log(x2))
+mod3 <- lm(y ~ x1 + x2) # removing outliers
+
+mods <- list(mod1 = mod1, mod2 = mod2, mod3 = mod3)
+# ...
+```
+
+## Creating the specifications
+
+The [`multiverse`](https://cran.r-project.org/web/packages/multiverse/readme/README.html) R Package and the related paper [@Gotz2024-ov] provides a very flexible and complex syntax to define different specifications.
+
+## Creating the specifications
+
+For this example we can use some custom functions, in particular the `create_multi()` function. There are no wrong solutions if the results is correct.
+
+```{r}
+#| echo: true
+devtools::load_all()
+
+slog <- function(x) {
+  if(any(x == 0)){
+    x <- x + 1
+  }
+  log(x)
+}
+
+multi <- create_multi(
+  math.anx ~ asi + faculty + stat.anx.TOT, # full model formula
+  focal = "asi", # focal predictor, never removed
+  nfuns = c("slog"), # functions for the numeric variables
+  data = dat
+)
+```
+
+## Creating the specifications
+
+```{r}
+multi
+```
+
+## Creating the specifications
+
+Whatever the method we used, we need:
+
+-   a list of models
+-   a way to easily extract the coefficients or other quantities
+-   a way to extract a summary of the specifications i.e. if a variable is included or not, the type of tranformation, etc.
+
+## Pay attention with interactions!
+
+When an interaction is included in the model, the interpretation of the model coefficients completely change, especially if the interaction is consistent. You cannot compare a focal coefficients directly for models with and without interactions.
+
+Let's assume that `asi` is the focal coefficient and we include in the multiverse these two models:
+
+```{r}
+#| echo: true
+fit_int <- lm(math.anx ~ faculty + asi + faculty:asi, data = dat)
+fit_no_int <- lm(math.anx ~ faculty + asi, data = dat)
+```
+
+## Pay attention with interactions!
+
+The `asi` effect in one case is the overall effect (i.e., main effect) controlling for `faculty`. In the other case is the `asi` effect of the reference value.
+
+```{r}
+gg <- expand_grid(
+  faculty = unique(dat$faculty),
+  asi = seq(min(dat$asi), max(dat$asi), length.out = 100)
+)
+
+gg$y_int <- predict(fit_int, gg)
+gg$y_no_int <- predict(fit_no_int, gg)
+
+gg |> 
+  pivot_longer(c(y_int, y_no_int)) |> 
+  mutate(name = ifelse(name == "y_int", "Interaction", "No Interaction")) |> 
+  ggplot(aes(x = asi, y = value, color = faculty)) +
+  facet_wrap(~name) +
+  geom_line() +
+  theme(legend.position = "bottom",
+        legend.title = element_blank()) +
+  ylab("math.anx")
+```
+
+## Pay attention with interactions!
+
+One should adjust the contrasts coding of factors and/or the centering of numeric variables.
+
+```{r}
+#| echo: true
+# sum to zero contrasts i.e. estimating the main effect of asi
+update(fit_int, contrasts = list(faculty = contr.sum(3)))
+
+# with emmeans
+emmeans::emtrends(fit_int, ~1, var = "asi")
+```
+
+## Why exploring is important?
+
+A multiverse analysis increase the complexity of the data analysis. **There is no longer a single dataset and result to discuss**.
+
+## Let's create some scenarios :)
+
+Firstly, we use variable transformations directly within the model formula. In this way it is easier to extract the conditions. Thus we define some wrappers:
+
+```{r}
+#| echo: true
+#| 
+
+# safe version of log() with 0 variables
+slog <- function(x){
+  if(any(x == 0)){
+    x <- x + 1
+  }
+  log(x)
+}
+
+# function factories, see https://adv-r.hadley.nz/function-factories.html
+polyN <- function(degree = 1){
+  function(x) poly(x, degree = degree)
+}
+
+poly2 <- polyN(2)
+poly3 <- polyN(3)
+```
+
+## Let's create some scenarios :)
+
+More wrappers:
+
+```{r}
+#| echo: true
+cutN <- function(breaks){
+  function(x){
+    cut(x, breaks = breaks)
+  }
+}
+
+cut2 <- cutN(2)
+cut4 <- cutN(4)
+```
+
+## Let's create some scenarios :)
+
+Then we can identify some univariate/multivariate outliers or some observations that we may consider removing for some reasons.
+
+## Let's create some scenarios :)
+
+```{r}
+#| echo: true
+#| cache: true
+
+focal <- "self.efficacy"
+
+multi <- create_multi(
+  math.anx ~ self.efficacy + faculty + asi + gender.category + 
+      program.type + frost.da,
+  focal = focal,
+  nfuns = c("slog", "cut2", "poly2"),
+  data = dat
+)
+```
+
+## Let's fit the models
+
+```{r}
+#| echo: true
+#| cache: true
+
+# faster than before
+get_coef <- function(x, coef = NULL){
+  xs <- data.frame(summary(x)$coefficients)
+  if(!is.null(coef)){
+    xs <- xs[coef, ]
+  }
+  xs$param <- rownames(xs)
+  return(xs)
+}
+
+fitl <- vector(mode = "list", length = length(multi$calls))
+
+for(i in 1:length(multi$calls)){
+  form <- paste0("math.anx", multi$calls[i])
+  fitl[[i]] <- glm(form, family = gaussian(link = "identity"), data = dat)
+}
+
+resl <- lapply(fitl, get_coef, focal)
+res <- bind_rows(resl, .id = "mod")
+rownames(res) <- NULL
+names(res) <- c("mod", "b", "se", "t", "p", "param")
+```
+
+## Let’s fit the models
+
+Now we have a dataframe with all the model coefficients across the specifications. We can start our multiverse!
+
+```{r}
+#| echo: true
+head(res)
+```
+
+## Exploratory tools
+
+-   Marginal/Conditional effects
+-   Vibration of Effects
+-   Specification Curve
+
+## Marginal/Conditional effects
+
+Overall distribution of regression parameters:
+
+```{r}
+res |> 
+  ggplot(aes(x = b)) +
+  geom_histogram(bins = 50, fill = "dodgerblue", col = "black") +
+  xlab(focal)
+```
+
+## Marginal/Conditional effects
+
+We can combine the model results with a table created by all conditions with the custom `get_info_models()` function:
+
+```{r}
+#| echo: true
+
+info <- get_info_models(multi)
+head(info)
+```
+
+## Marginal/Conditional effects
+
+Then we can combine the `info` table with the coefficients table and we have all the important information.
+
+```{r}
+#| echo: true
+# same type
+res$mod <- as.numeric(res$mod)
+info$mod <- as.numeric(info$mod)
+# merging the two tables
+multi_res <- left_join(res, info, by = "mod")
+head(multi_res)
+```
+
+## Marginal/Conditional effects
+
+Finally we can plot also the distributions of parameters conditioned on the presence/absence of a particular other predictor:
+
+```{r}
+multi_res |> 
+    pivot_longer(starts_with("x_")) |> 
+    filter(!is.na(value)) |> 
+    filter(name != paste0("x_", focal)) |> 
+    ggplot(aes(x = b, fill = name)) +
+    geom_density(alpha = 0.5) +
+    theme(legend.position = "bottom")
+```
+
+## Vibration of Effects (VoE) [@Patel2015-pn]
+
+![](img/patel-vibration.pdf)
+
+## Vibration of Effects (VoE) [@Patel2015-pn]
+
+The VoE is a statistical approach to evaluate the variability in effect estimates and p value due to different sources of variability (i.e., *vibrations*)
+
+-   **sampling** vibration: subsets of the full dataset
+-   **model** vibration: combinations of control variables
+-   **pre-processing** vibration: inclusio/exclusion criteria, outliers, etc.
+
+## Vulcano Plot
+
+The Vulcano Plot is the graphical tool used in the VoE as a diagnostic tool.
+
+```{r}
+#| out.width: 85%
+set.seed(5078)
+K <- 200
+N <- 30
+pmin <- 1
+pmax <- 10
+R2 <- rbeta(K, 1, 10)
+p <- round(runif(K, 1, pmax))
+df <- N - p - 1
+b <- rnorm(K, 0.4, 0.05)
+se <- sqrt(1 - R2) / sqrt(N)
+t <- b/se
+tobs <- rt(K, df, t)
+bobs <- tobs * se
+pval <- 1 - pt(abs(tobs), df)
+
+# plot(bobs, -log10(pval), xlab = tex("$\\beta$"), ylab = tex("$-\\log_{10}(p)$"))
+# abline(h = c(-log10(0.05), -log10(0.001)), col = "darkgreen")
+# abline(v = 0, col = "firebrick")
+
+dd <- data.frame(bobs, pval)
+
+ggplot(dd, aes(x = bobs, y = -log10(pval))) +
+    geom_point() +
+    xlab(tex("$\\beta$")) +
+    ylab(tex("$-\\log_{10}(p)$")) +
+    geom_hline(yintercept = c(-log10(0.05), -log10(0.001)), col = "darkgreen") +
+    geom_vline(xintercept = 0, col = "firebrick")
+```
+
+## Vulcano Plot
+
+The `x` axis is the effect size. Usually a regression coefficient of a *focal* parameter. Can be a raw or standardized regression coefficient or whatever effect size measure.
+
+The `y` axis is the associated p-value transformed in $-\log_{10}(p)$ for better intepretation and visualization. Higher tranformed p values are smaller raw p values.
+
+## Vibration of Effects (VoE)
+
+The authors proposed to summarise the VoE using the range of effect sizes and p values. In particular the difference between the $99^{th}$ and $1^{st}$ percentiles.
+
+```{r}
+#| out-width: 90%
+ggplot(dd, aes(x = bobs, y = -log10(pval))) +
+    geom_point() +
+    xlab(tex("$\\beta$")) +
+    ylab(tex("$-\\log_{10}(p)$")) +
+    geom_hline(yintercept = c(-log10(0.05), -log10(0.001)), col = "darkgreen", lwd = 1) +
+    geom_vline(xintercept = 0, col = "firebrick", lwd = 1) +
+    geom_vline(xintercept = c(quantile(dd$bobs, c(0.01, 0.5, 0.99))),
+               linetype = "dashed") +
+    geom_hline(yintercept = c(quantile(-log10(dd$pval), c(0.01, 0.5, 0.99))),
+               linetype = "dashed")
+```
+
+## Vibration of Effects (VoE)
+
+They identified three usual pattern for a Vulcano Plot:
+
+```{r}
+set.seed(5078)
+K <- 100
+N <- 30
+pmin <- 1
+pmax <- 10
+R2 <- rbeta(K, 1, 10)
+p <- round(runif(K, 1, pmax))
+df <- N - p - 1
+b <- rnorm(K, 0.4, 0.05)
+bjanus <- rnorm(K, 0, 0.1)
+bmix <- rnorm(K, 0.2, 0.1)
+se <- sqrt(1 - R2) / sqrt(N)
+tobs <- rt(K, df, b/se)
+tobs_janus <- rt(K, df, bjanus/se)
+tobs_mix <- rt(K, df, bmix/se)
+
+bobs <- tobs * se
+bobs_janus <- tobs_janus * se
+bobs_mix <- tobs_mix * se
+
+dd <- data.frame(
+    b = c(bobs, bobs_janus, bobs_mix),
+    t = c(tobs, tobs_janus, tobs_mix),
+    df = rep(df, 3),
+    type = rep(c("Robust", "Janus", "Mixed"), each = K)
+)
+
+dd$pval <- 1 - pt(abs(dd$t), dd$df)
+dd$type <- factor(dd$type, levels = c("Robust", "Janus", "Mixed"))
+
+ggplot(dd, aes(x = b, y = -log10(pval))) +
+    geom_point() +
+    xlab(tex("$\\beta$")) +
+    ylab(tex("$-\\log_{10}(p)$")) +
+    facet_wrap(~type)
+```
+
+## Vibration of Effects (VoE)
+
+The **Robust** plot suggests a stable pattern across specifications, with the majority if not the total being positive and significant.
+
+The **Janus**[^1] plot suggests the worst scenario where in some conditions the effect is not only not significant but reversed.
+
+[^1]: Fun fact: Janus comes from the Roman/Greek god with two faces :)
+
+The **Mixed** plot suggests a less robust effect with few effect size reversals in rare specifications.
+
+## P-values transformation
+
+There are different ways to transform p-values to improve the interpretation and visualization.
+
+```{r}
+#| out-width: 90%
+tp <- function(p, type = c("-log10", "z")){
+    if(type == "-log10"){
+        -log10(p)
+    } else{
+        qnorm(1 - p/2)
+    }
+}
+
+par(mfrow = c(1,2), cex = 1.5)
+curve(tp(x, "-log10"), 0, 1, xlab = "P-value", lwd = 2,
+      ylab = latex2exp::TeX("$-\\log_{10}(p)$"))
+curve(tp(x, "z"), 0, 1, xlab = "P-value", lwd = 2,
+      ylab = latex2exp::TeX("$z_p$"))
+```
+
+## P-values transformation
+
+Values higher than \~1.3 (in $\log_{10}$) or \~2 ($z$ transformation) are significant assuming the traditional $\alpha = 0.05$.
+
+```{r}
+#| out-width: 90%
+par(mfrow = c(1,2), cex = 1.5)
+curve(tp(x, "-log10"), 0, 0.1, xlab = "P-value", lwd = 2,
+      ylab = latex2exp::TeX("$-\\log_{10}(p)$"))
+curve(tp(x, "z"), 0, 0.1, xlab = "P-value", lwd = 2,
+      ylab = latex2exp::TeX("$z_p$"))
+```
+
+## Vulcano plot with our data
+
+We can create a basic version of the vulcano plot with our dataset:
+
+```{r}
+#| echo: true
+#| eval: false
+multi_res |> 
+    mutate(sign = ifelse(p <= 0.05, "<= 0.05", "> 0.05"),
+           sign = factor(sign, levels = c("<= 0.05", "> 0.05"))) |> 
+    ggplot(aes(x = b, y = tp(p, "-log10"))) +
+    geom_point(aes(shape = sign, color = sign), size = 5) +
+    ylab("-log10(p)") +
+    xlab(focal) +
+    scale_shape_manual(values = c(3, 16)) +
+    theme(legend.title = element_blank())
+```
+
+## Vulcano plot with our data
+
+```{r}
+#| echo: false
+#| eval: true
+multi_res |> 
+    mutate(sign = ifelse(p <= 0.05, "<= 0.05", "> 0.05"),
+           sign = factor(sign, levels = c("<= 0.05", "> 0.05"))) |> 
+    ggplot(aes(x = b, y = tp(p, "-log10"))) +
+    geom_point(aes(shape = sign, color = sign), size = 5) +
+    ylab("-log10(p)") +
+    xlab(focal) +
+    scale_shape_manual(values = c(3, 16)) +
+    theme(legend.title = element_blank())
+```
+
+## Marginal/Conditional effects
+
+A way to evaluate the impact of the multiverse scenario could be to use an ANOVA-style way of thinking. We can fit a regression model on the multiverse where the focal coefficient is the response variable and a series of dummy variables to code the inclusion/exclusion of a certain predictor.
+
+Then we can estimate the % of explained variance of each predictor as an index of the impact in the multiverse results.
+
+A more refined version of this approach can be found in @Klau2023-sb
+
+## Decomposing the multiverse variance
+
+We can create a dataset with dummy variables when a specific predictor is included or not. We are ignoring the transformations of the specific variable.
+
+```{r}
+multi_fit <- multi_res |> 
+    select(b, starts_with("x_"))
+
+multi_fit <- multi_fit |> 
+    pivot_longer(starts_with("x_"),
+                 names_to = "predictor",
+                 values_to = "x") |> 
+    mutate(included = ifelse(is.na(x), 0, 1),
+           predictor = gsub("x_", "", predictor)) |> 
+    select(-x) |> 
+    filter(predictor != focal) |> 
+    pivot_wider(names_from = predictor, values_from = included)
+
+head(multi_fit)
+```
+
+## Decomposing the multiverse variance
+
+Then we can fit a linear regression and then evaluate the impact of including/excluding a predictor.
+
+```{r}
+#| echo: true
+#| size: scriptsize
+
+fit <- lm(b ~ ., data = multi_fit)
+summary(fit)
+```
+
+## Decomposing the multiverse variance
+
+```{r}
+#| echo: true
+#| eval: false
+effectsize::eta_squared(fit, partial = FALSE)
+```
+
+```{r}
+esq <- effectsize::eta_squared(fit, partial = FALSE)
+esq <- data.frame(esq)[, c(1,2,4,5)]
+esq$Eta2 <- round(esq$Eta2, 3)
+esq$CI_low <- round(esq$CI_low, 3)
+```
+
+## Specification Curve [@Simonsohn2020-sr]
+
+The specification curve is both an inferential and descriptive tool to summarise the results from a multiverse analysis.
+
+![](img/spec-curve-example.pdf)
+
+## Specification Curve as descriptive tool
+
+Basically from *M* specifications we extract the focal coefficient then:
+
+-   we sort the coefficients from the lowest to the highest and assign a progressive index
+-   we plot the index as a function of the coefficient value
+-   for each scenario we code the corresponding set of conditions/variables
+-   we combine the previous plot with a tile-plot (or similar) showing for each scenario the set of variables/choices
+
+## Specification with the dataset
+
+```{r}
+#| echo: true
+#| size: tiny
+spec_data <- multi_res |> 
+    # sorting
+    arrange(desc(b)) |> 
+    # index with the order
+    mutate(spec = 1:n())
+
+top <- spec_data |> 
+    # confidence intervals
+    mutate(lb = b - se * 2,
+           ub = b + se * 2) |> 
+    ggplot(aes(x = spec, y = b)) +
+    geom_point() +
+    theme(axis.text.x = element_blank(),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank())
+
+bottom <- spec_data |> 
+    pivot_longer(starts_with("x_")) |> 
+    drop_na() |> 
+    mutate(name = gsub("x_", "", name)) |> 
+    ggplot(aes(x = spec, y = value)) +
+    geom_point() +
+    theme(axis.title.y = element_blank(),
+          strip.text.y = element_text(size = 9),
+          axis.text.y = element_text(size = 9)) +
+    xlab("Specification") +
+    facet_grid(name~., scales = "free")
+```
+
+## Specification with the dataset
+
+```{r}
+top / bottom + plot_layout(heights = c(0.3, 1))
+```
+
+## Other descriptive tools
+
+In general, any descriptive statistics can be useful. The main points in a multiverse description are:
+
+-   the range of the estimated effects
+-   the impact of the choices
+-   the impact on the conclusions (e.g., statistical significance)
+
+# Can the EMA be misleading?
+
+## Let's have a look to another example
+
+```{r}
+set.seed(8883)
+P <- 5
+N <- 50
+R <- filor::rmat(runif(filor::ncor(P), 0, 0.6))
+R <- Matrix::nearPD(R)$mat
+X <- MASS::mvrnorm(N, rep(0, P), R)
+B <- c(0, rep(0, P))
+X <- data.frame(X)
+form <- sprintf("~ %s", paste0(names(X), collapse = " + "))
+XM <- model.matrix(as.formula(form), data = X)
+y <- rnorm(N, c(XM %*% B), 1)
+multi <- create_multi(as.formula(form), data = X)
+
+ffl <- vector(mode = "list", length = length(multi$calls))
+
+for(j in 1:length(multi$calls)){
+    ff <- paste0("y ", multi$calls[j])
+    ffl[[j]] <- lm(ff, data = X)
+}
+
+res <- lapply(ffl, get_coef)
+res <- bind_rows(res, .id = "mod")
+names(res) <- c("mod", "b", "se", "t", "p", "param")
+```
+
+We have a multiverse with `r length(multi$calls)` scenarios, `r N` observations and `r P` predictors, this is the vulcano plot. **What do you think?**
+
+```{r}
+#| out-width: 95%
+res |>
+    filter(param != "(Intercept)") |>
+    mutate(sign = p <= 0.05) |>
+    ggplot(aes(x = b, y = -log10(p))) +
+    geom_hline(yintercept = -log10(0.05), lty = "dashed") +
+    geom_point(aes(shape = sign, color = param, alpha = sign),
+               size = 4) +
+    scale_shape_manual(values = c(16, 3)) +
+    xlab("Coefficients") +
+    annotate("label", x = -0.45, y = -log10(0.05), label = "p = 0.05", size = 5) +
+    scale_alpha_manual(values = c(0.5, 1)) +
+    labs(
+       color = NULL 
+    ) +
+    guides(
+        shape = "none",
+        alpha = "none"
+    )
+```
+
+## Let's have a look to another example[^2]
+
+[^2]: Thanks to Livio Finos for the insightful example
+
+From the previous multiverse it is clear that something is going on. Some of the coefficients are significant and other not. There is also a little bit of Janus effect.
+
+. . .
+
+But, the previous example was a simulated multiverse where all the coefficients $\beta_j = 0$ (the null hypothesis is true). **All the significant scenarios are false positives (type-1 error)!**
+
+## Why? multiple testing problem!
+
+- A multiverse can be considered as a **multiple testing problem** because we are testing a set of hypotheses with the same dataset. The type-1 error rate ($\alpha$) need to be controlled otherwise the actual level is higher than the nominal level.
+- We can demonstrate this with a simple simulation. We simulate $k$ variables and a one-sample t-test for each variable. The ground truth is that we have $\mu_1, \mu_2, \dots, \mu_k = 0$ thus $H_0$ is true.
+- We repeat the simulation $B$ times and we count how many times $p \leq \alpha$ for at least one of the $k$ tests. This is our estimated type-1 error rate.
+
+## Why? multiple testing problem!
+
+```{r}
+#| echo: true
+k <- 10  # number of variables
+n <- 100 # number of observations
+R <- 0 + diag(1 - 0, k) # correlation matrix
+B <- 1e3
+
+PM <- matrix(NA, B, k)
+
+for(i in 1:B){
+    X <- MASS::mvrnorm(n, rep(0, k), R)
+    p <- apply(X, 2, function(x) t.test(x)$p.value)
+    PM[i, ] <- p
+}
+
+# type-1 error for each variable, ignoring multiple testing
+apply(PM, 2, function(x) mean(x <= 0.05))
+
+# type-1 error considering the k tests (should be alpha)
+mean(apply(PM, 1, function(x) any(x <= 0.05)))
+```
+
+## Why? multiple testing problem!
+
+To have a better overview, we can repeat the simulation for different number of $k$. Quite scary right?
+
+```{r}
+#| cache: true
+k <- c(1, 5, 10, 20, 50, 100)
+n <- 100 # number of observations
+R <- 0 + diag(1 - 0, k) # correlation matrix
+B <- 1e3
+
+type1 <- rep(NA, length(k))
+
+for(i in 1:length(k)){
+    p <- rep(NA, B)
+    for(j in 1:B){
+        R <- 0 + diag(1 - 0, k[i]) # correlation matrix
+        X <- MASS::mvrnorm(n, rep(0, k[i]), R)
+        pi <- apply(X, 2, function(x) t.test(x)$p.value)
+        p[j] <- any(pi <= 0.05)
+    }
+    type1[i] <- mean(p)
+}
+
+dd <- data.frame(
+    k = k,
+    type1 = type1
+)
+```
+
+```{r}
+#| out-width: 90%
+dd |> 
+    ggplot(aes(x = k, y = type1)) +
+    geom_point(size = 3) +
+    geom_line() +
+    xlab("Number of tests (k)") +
+    ylab("Type-1 Error")
+```
+
+
+## So what? No multiverse?
+
+Exploring is fine and is quite important if not fundamental. But, when we explore the p-values thus the **inferential** results from the single scenarios, we are inflating the type-1 error and our **inferential** conclusions are no longer valid.
+
+. . .
+
+If we want an inferential answer from our multiverse (not always the case) we need a proper inferential framework. This is the role of the **inferential multiverse analaysis**.
+
+# Inferential Multiverse Analysis (IMA)
+
+## Family-wise error rate (FWER)[^3]
+
+[^3]: Thanks to Anna Vesely for the amazing introduction to the multiple testing problem (see the [slides](https://psicostat.dpss.psy.unipd.it/files/2023-04-28_vesely.pdf))
+
+```{r}
+library(kableExtra)
+
+dd <- data.frame(
+    stringsAsFactors = FALSE,
+    V1 = c("Test", "Test", ""),
+    V2 = c("Rejected", "Not rejected", "\\textbf{Tot}"),
+    V3 = c("True Positive (S)", "False Negative (T)", "$m_1$"),
+    V4 = c("False Positive (V)", "True Negative (U)", "$m_0$"),
+    V5 = c("$R$","$m - R$", "$m$")
+) 
+ 
+dd$V3 <- cell_spec(dd$V3, bold = TRUE, color = ifelse(dd$V4 == "False Positive (V)", "#2cb600", scales::alpha("black", 0.7)), escape = FALSE)
+dd$V4 <- cell_spec(dd$V4, bold = TRUE, color = ifelse(dd$V4 == "False Positive (V)", "#b22222", scales::alpha("black", 0.7)), escape = FALSE)
+
+dd |> 
+    kable(format = "latex",
+          col.names = c("", "", "False", "True", "Tot"),
+          align = "c",
+          escape = FALSE,
+          booktabs = TRUE) |> 
+    kable_styling(font_size = 8) |>
+    column_spec(1, bold = TRUE) |> 
+    row_spec(0, bold = TRUE) |> 
+    add_header_above(c(" " = 2, "$H_0$" = 2, " " = 1),
+                     bold = TRUE, escape = FALSE) |> 
+    collapse_rows(columns = 1)
+```
+
+The FWER is the probability of committing type-1 error thus $\mbox{P}(V > 0)$. Controlling the FWER (whatever the methods) keep $\mbox{P} \leq \alpha$.
+
+There are different procedures for controlling the FWER, such as the Bonferroni or the Holm–Bonferroni method.
+
+## Correcting the p-values
+
+The main problem is that the number of tests in a multiverse can be quite large.
+
+. . .
+
+As an example, we simulated a series of tests with different effect size to show the impact on the type-1 error rate and the power.
+
+## Correcting the p-values
+
+Using a standard method (e.g., Bonferroni) clearly controls the type-1 error but reduces a lot the statistical power. At the same time, without correction the inflation is large.
+
+```{r}
+#| cache: true
+B <- 1e3
+
+sim <- expand_grid(m = c(0, 0.1, 0.3, 0.5, 0.8, 1),
+            p = c(5, 10, 50, 100),
+            nsim = B)
+
+sim$res <- vector(mode = "list", length = nrow(sim))
+
+for(i in 1:nrow(sim)){
+    at_least_1 <- at_least_1_bonf <- rep(NA, B)
+    for(j in 1:B){
+        pval <- simMulti(ns = 200, sim$m[i], p = sim$p[i], r = 0.6)
+        pval_bonf <- p.adjust(pval, "bonferroni")
+        at_least_1[j] <- any(pval <= 0.05)
+        at_least_1_bonf[j] <- any(pval_bonf <= 0.05)
+    }
+    dd <- data.frame(
+        at_least_1 = c(at_least_1, at_least_1_bonf),
+        type = rep(c("raw", "bonferroni"), each = B)
+    )
+    sim$res[[i]] <- dd
+}
+```
+
+```{r}
+#| out-width: 90%
+sim |> 
+    unnest(res) |> 
+    group_by(m, p, type) |> 
+    summarise(type1 = mean(at_least_1)) |> 
+    ggplot(aes(x = m, y = type1, color = type)) +
+    facet_wrap(~p) +
+    geom_point(size = 4) +
+    geom_line() +
+    labs(
+        y = "At least one p <= 0.05",
+        x = "Effect size (H0: d = 0)"
+    ) +
+    theme(legend.position = "bottom",
+          legend.title = element_blank())
+```
+
+## Correlation between scenarios is (probably) large
+
+The multiverse scenarios are computed on the same dataset thus the correlation between tests is probably medium-large. For example:
+
+```{r}
+#| echo: true
+x <- runif(100, 5, 10)
+y <- x * 0.1 + rnorm(100)
+
+fit1 <- lm(y ~ x)
+fit2 <- lm(y ~ cut(x, breaks = 2))
+fit3 <- lm(y ~ log(x))
+fit4 <- lm(y ~ poly(x, 2))
+
+pp <- sapply(list(fit1, fit2, fit3, fit4), predict)
+round(cor(pp), 2)
+```
+
+## A more powerful correction method[^4]
+
+[^4]: @Goeman2014-om
+
+The Bonferroni (and similar) methods assume that the tests are independent thus regardless the dependence structure the FWER is under control.
+
+The permutation-based methods (maxT, minP, etc.) take into account the correlation structure providing FWER control under $H_0$ but a more powerful test under $H_1$.
+
+## Permutation testing in a nutshell
+
+Permutation testing requires computing the distribution of the test statistics $T$ where we know that $H_0$ is true.
+
+. . .
+
+We can force the null to be true permuting the data *removing* the assumed effect. We repeat this process a large number of times $B$.
+
+. . .
+
+Then we compare the observed test statistics $T_1$ with the distribution of permuted test statistics obtaining the permutation based p-value $p = \frac{\#(T_1 \geq \mathbf{T}_B)}{B}$[^5]
+
+[^5]: $\#$ is the count function.
+
+## Permutation testing in a nutshell
+
+Let's make an example with a two-groups comparison:
+
+```{r}
+#| echo: true
+N <- 30
+d <- 1 # effect size
+x <- rep(c(0, 1), each = N/2) # dummy for the group
+y <- rnorm(N, d * x, 1)
+tapply(y, x, mean)
+```
+
+## Permutation testing in a nutshell
+
+Let's make an example with a two-groups comparison:
+
+```{r}
+data.frame(x = factor(x), y) |> 
+    ggplot(aes(x = x, y = y), fill = "dodgerblue") +
+    geom_boxplot()
+```
+
+## Permutation testing in a nutshell
+
+We need to flip the group label thus removing the group effect.
+
+```{r}
+#| echo: true
+B <- 1e3 # number of permutations
+tp <- rep(NA, B)
+tp[1] <- t.test(y ~ x)$statistic # first permutation always the observed data
+
+sample(x) # shuffling the group label
+
+for(i in 2:B){
+    xp <- sample(x)
+    tp[i] <- unname(t.test(y ~ xp)$statistic)
+}
+
+mean(abs(tp) >= abs(tp[1]))
+```
+
+## Permutation testing in a nutshell
+
+```{r}
+data.frame(
+    tp,
+    pval = abs(tp) >= abs(tp[1])
+) |> 
+    ggplot(aes(x = tp)) +
+    geom_histogram(aes(fill = pval),
+                   bins = 80,
+                   color = "black") +
+    theme(legend.position = "none") +
+    xlab(latex2exp::TeX("$T_B$", bold = TRUE)) +
+    geom_point(x = tp[1], y = 0, size = 4,
+               col = "firebrick") +
+    scale_fill_manual(values = c(scales::alpha("black", 0.2), "dodgerblue"))
+```
+
+## maxT procedure @Westfall1993-ek
+
+The maxT is a permutation-based method to control the FWER. With the method we can obtain:
+
+-   overall inference across $M$ tests with *weak* control of FWER
+-   individually adjusted p-values for each test (i.e, *strong* FWER control)
+
+## maxT with correlated variables
+
+Beyond the actual method and algorithm, the advantage of the maxT approach is taking into account the correlation between tests.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+#| out-width: 85%
+#| fig-align: center
+
+set.seed(3290)
+r <- c(0, 0.3, 0.5, 0.9)
+nsim <- 1e3
+n <- 1e4
+k <- 30
+
+mu <- runif(k, 0, 0.5)
+res <- vector(mode = "list", length = length(r))
+
+for(i in 1:length(r)){
+    R <- filor::rmat(rep(r[i], filor::ncor(k)))
+    Y <- MASS::mvrnorm(k, mu, R, empirical = TRUE)
+    fl <- flip::flip(Y)
+    fl <- flip::flip.adjust(fl)
+    p_maxt <- fl@res$`Adjust:maxT`
+    p_raw <- fl@res$`p-value`
+    p_bonf <- p.adjust(p_raw, method = "bonferroni")
+    res[[i]] <- list(p = p_raw, p_maxt = p_maxt, p_bonf = p_bonf)
+}
+
+names(res) <- r
+res <- bind_rows(res, .id = "rho")
+res$rho <- factor(res$rho, labels = latex2exp::TeX(sprintf("$\\rho = %s$", r)))
+
+res |> 
+    pivot_longer(c(p_maxt, p_bonf)) |> 
+    mutate(name = ifelse(name == "p_bonf", "Bonferroni", "maxT")) |>
+    ggplot(aes(x = p, y = value, color = name)) +
+    geom_point(size = 3) +
+    facet_wrap(~rho, labeller = label_parsed) +
+    geom_abline(lty = "dashed", linewidth = 0.3) +
+    geom_line() +
+    xlab("Raw p-value") +
+    ylab("Corrected p-value") +
+    theme_minimal(base_size = 17) +
+    theme(legend.position = "bottom",
+          legend.title = element_blank()) +
+    xlim(c(0,1)) +
+    ylim(c(0,1))
+```
+
+## Inferential Methods
+
+-   Specification Curve
+-   Post-Selection Inference in Multiverse Analysis (PIMA)
+
+## Specification Curve
+
+The specification curve [@Simonsohn2020-sr] is the first attempt to build an inferential framework for multiverse analysis.
+
+-   provides only *weak* control of type-1 error
+-   is not directly applicable to GLMs [only standard linear models, see @Girardi2024-ip]
+-   is computationally expensive
+
+## The PIMA recipe... [@Girardi2024-ip]
+
+PIMA provides *weak* and *strong* type-1 error control with a powerful method based on permutations (maxT) and applicable to whatever GLM (Logistic, Poisson, etc.).
+
+For constructing the inferential approach with PIMA we need:
+
+-   a flexible modelling framework: **Generalized Linear Models**
+-   a permutation-based inferential approach: **Flipscores**
+-   a permutation-based and powerful method for weak and strong FWER control: **maxT**
+
+## The core of PIMA, the **flipscores** method
+
+- The formal part of the **flipscores** method is quite complex and beyond our scope and expertise. But a detailed description can be found in @Hemerik2020-nj and @Girardi2024-ip.
+- Essentially the **flipscores** method is an alternative way of doing inference for parameters of a GLM based on permutations.
+- The idea is conceptually the same as the two-groups example, but can works for multiple regression models with covariates and interactions.
+
+## Intution of **flipscores**
+
+This method can be extended to whatever GLM and to any number of predictors/confounders.
+
+The actual permutation test is obtained flipping the sign of the scores/residuals thus obtaining the distribution under the null hypothesis of the test statistics.
+
+Everthing is implemented into the `flipscores` package [@Hemerik2020-nj] and on CRAN <https://cran.r-project.org/web/packages/flipscores/index.html>.
+
+## `flipscores` package
+
+With the `flipscores` function is very easy to fit a linear model with permutations-based p-values.
+
+```{r}
+#| echo: true
+#| size: tiny
+
+library(flipscores)
+fit <- flipscores(Sepal.Length ~ Petal.Width + Species, data = iris)
+summary(fit)
+```
+
+## Intuition of PIMA
+
+The idea of PIMA is to extend the `flipscores` method to $M$ models (where $M$ is the number of scenarios) and perform inference at the multiverse level.
+
+Using the maxT approach we can combine the $M$ tests into a single test with weak control of FWER. The global null hypothesis is:
+
+$$
+\mathcal{H} = \bigcap_{m=1}^{M} \mathcal{H}_m : \beta_m = 0 \ \text{for all} \ m = 1, \ldots, M.
+$$
+
+In addition, we can correct the indidual p-values with strong FWER control using the maxT method.
+
+## The `pima` package
+
+We are implementing everything into the `pima` package that is under development. You can try it but there could be bugs and breaking changes in the near future.
+
+```{r}
+#| eval: false
+remotes::install_github("livioivil/pima")
+```
+
+You can explore the package here <https://github.com/livioivil/pima>. The package mainly depends on `jointest` that is the actual package for combining multiple (correlated) tests and correcting them.
+
+## The `pima` package
+
+The package has a main function called `pima::pima()` that takes a list of models (of class `glm`) and compute the global test and the correction for individual scenarios.
+
+```{r}
+#| echo: true
+#| cache: true
+# fitl is the list of fitted models
+# tested_coeffs is the focal variable, other are confounders
+
+library(pima)
+
+# this is a bug/part to be improved, ignore
+for(i in 1:length(fitl)){
+    fitl[[i]]$call$formula <- as.formula(fitl[[i]]$formula)
+}
+
+multi_pima <- pima(fitl, tested_coeffs = "self.efficacy")
+```
+
+## The `pima` results
+
+The correlations between the scenarios is very high, the maxT method will be powerful!
+
+```{r}
+#| out-width: 90%
+TT <- multi_pima$Tspace
+rownames(TT) <- NULL
+names(TT) <- paste0("m", 1:ncol(TT))
+
+cor(TT) |> 
+    reshape2::melt() |> 
+    ggplot(aes(x = Var1, y = Var2, fill = value)) +
+    geom_tile() +
+    theme(axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.ticks.y = element_blank()) +
+    labs(
+        fill = latex2exp::TeX("$\\rho$"),
+        x = "M",
+        y = "M"
+    ) +
+    coord_fixed()
+```
+
+## The `pima` results
+
+```{r}
+#| echo: true
+# overall test, weak control FWER
+summary(pima::global_tests(multi_pima))
+
+# adjusted p values, strong control FWER
+head(summary(multi_pima))
+```
+
+## maxT correction
+
+```{r}
+pima_summ <- summary(multi_pima)
+pima_summ |> 
+    mutate(sign = case_when(
+        p > 0.05 ~ "never",
+        p.adj.maxT > 0.05 & p <= 0.05 ~ "before maxT", 
+        p.adj.maxT <= 0.05 ~ "after maxT"),
+        sign = factor(sign, levels = c("never", "before maxT", "after maxT"))) |> 
+    ggplot(aes(x = -log10(p), y = -log10(p.adj.maxT), color = sign)) +
+    geom_point(size = 3) +
+    geom_abline() +
+    ggtitle("maxT correction impact") +
+    xlab("-log10(p-values)") +
+    ylab("-log10(maxT p-values)") +
+    xlim(0, 4) +
+    ylim(0, 4)
+```
+
+## Improved vulcano plot
+
+```{r}
+pima_summ |> 
+    mutate(sign = case_when(
+        p > 0.05 ~ "never",
+         p.adj.maxT > 0.05 & p <= 0.05 ~ "before maxT", 
+         p.adj.maxT <= 0.05 ~ "after maxT"),
+        sign = factor(sign, levels = c("never", "before maxT", "after maxT"))) |> 
+    ggplot(aes(x = Estimate, y = -log10(p.adj.maxT), color = sign)) +
+    geom_point(size = 3, show.legend = TRUE) +
+    ylab("-log10(p)") +
+    theme(legend.position = "bottom") +
+    labs(
+        color = "p <= 0.05"
+    )
+```
+
+## References {.allowframebreaks}
+
+\scriptsize

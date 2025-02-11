@@ -8,5 +8,8 @@
   "materials/exploring-the-multiverse.qmd": {
     "exploring-the-multiverse.html": "faa1aeed",
     "exploring-the-multiverse.tex": "d39c71e3"
+  },
+  "materials/space-travel-multiverse.qmd": {
+    "space-travel-multiverse.tex": "af128122"
   }
 }

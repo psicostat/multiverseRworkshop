@@ -368,3 +368,19 @@ expl_var <- function(x, tot = "explained"){
         eta2 = aov$sumsq[idx] / tt
     )
 }
+
+simMulti <- function(ns, m = 0, p, r, data = FALSE){
+    if(length(m) == 1){
+        m <- rep(m, p)
+    }
+    R <- r + diag(1 - r, p)
+    df <- ns - 1
+    V <- rWishart(n = 1, df = df, Sigma = R)
+    Rhat <- cov2cor(V[, , 1])
+    X <- MASS::mvrnorm(ns, m, Rhat)
+    if(data){
+        data.frame(X)
+    } else{
+        apply(X, 2, function(x) t.test(x)$p.value)
+    }
+}

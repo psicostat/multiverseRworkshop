@@ -4,118 +4,27 @@
     "href": "index.html",
     "title": "multiverseRworkshop",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+    "text": "This website contains the materials for the workshop about the Multiverse Analysis in R."
   },
   {
-    "objectID": "materials/exploring-the-multiverse.html#why-exploring-is-important",
-    "href": "materials/exploring-the-multiverse.html#why-exploring-is-important",
-    "title": "Untitled",
-    "section": "Why exploring is important?",
-    "text": "Why exploring is important?\nA multiverse analysis increase the complexity of the data analysis. There is no longer a single dataset and result to discuss."
+    "objectID": "index.html#materials",
+    "href": "index.html#materials",
+    "title": "multiverseRworkshop",
+    "section": "Materials",
+    "text": "Materials\n\nA space travel into the multiverse"
   },
   {
-    "objectID": "materials/exploring-the-multiverse.html#exploratory-tools",
-    "href": "materials/exploring-the-multiverse.html#exploratory-tools",
-    "title": "Untitled",
-    "section": "Exploratory tools",
-    "text": "Exploratory tools\n\nVulcano Plot and Vibration of Effects\nMarginal/Conditional effects\nSpecification Curve"
+    "objectID": "index.html#references",
+    "href": "index.html#references",
+    "title": "multiverseRworkshop",
+    "section": "References",
+    "text": "References\nThis is an updated selection of papers about the multiverse analysis.\n\nCalignano, G., Girardi, P., & Altoè, G. (2023). First steps into the pupillometry multiverse of developmental science. Behavior Research Methods. https://doi.org/10.3758/s13428-023-02172-8\nLiu, Y., Kale, A., Althoff, T., & Heer, J. (2021). Boba: Authoring and visualizing multiverse analyses. IEEE Transactions on Visualization and Computer Graphics, 27, 1753–1763. https://doi.org/10.1109/TVCG.2020.3028985\nHarder, J. A. (2020). The multiverse of methods: Extending the multiverse analysis to address data-collection decisions. Perspectives on Psychological Science: A Journal of the Association for Psychological Science, 15, 1158–1177. https://doi.org/10.1177/1745691620917678\nSteegen, S., Tuerlinckx, F., Gelman, A., & Vanpaemel, W. (2016). Increasing transparency through a multiverse analysis. Perspectives on Psychological Science: A Journal of the Association for Psychological Science, 11, 702–712. https://doi.org/10.1177/1745691616658637\nDel Giudice, M., & Gangestad, S. W. (2021). A traveler’s guide to the multiverse: Promises, pitfalls, and a framework for the evaluation of analytic decisions. Advances in Methods and Practices in Psychological Science, 4, 251524592095492. https://doi.org/10.1177/2515245920954925\nGirardi, P., Vesely, A., Lakens, D., Altoè, G., Pastore, M., Calcagnì, A., & Finos, L. (2024). Post-selection inference in multiverse analysis (PIMA): An inferential framework based on the sign flipping score test. Psychometrika, 89, 542–568. https://doi.org/10.1007/s11336-024-09973-6\nOlsson-Collentine, A., Aert, R. C. M. van, Bakker, M., & Wicherts, J. (2023). Meta-analyzing the multiverse: A peek under the hood of selective reporting. Psychological Methods. https://doi.org/10.1037/met0000559\nGötz, M., Sarma, A., & O’Boyle, E. H. (2024). The multiverse of universes: A tutorial to plan, execute and interpret multiverses analyses using the r package multiverse. International Journal of Psychology: Journal International de Psychologie, 59, 1003–1014. https://doi.org/10.1002/ijop.13229\nPatel, C. J., Burford, B., & Ioannidis, J. P. A. (2015). Assessment of vibration of effects due to model specification can demonstrate the instability of observational associations. Journal of Clinical Epidemiology, 68, 1046–1058. https://doi.org/10.1016/j.jclinepi.2015.05.029\nKlau, S., Felix, Patel, C. J., Ioannidis, J. P. A., Boulesteix, A.-L., & Hoffmann, S. (2023). Comparing the vibration of effects due to model, data pre-processing and sampling uncertainty on a large data set in personality psychology. Meta-Psychology, 7. https://doi.org/10.15626/mp.2020.2556"
   },
   {
-    "objectID": "materials/exploring-the-multiverse.html#vulcano-plot",
-    "href": "materials/exploring-the-multiverse.html#vulcano-plot",
-    "title": "Untitled",
-    "section": "Vulcano Plot",
-    "text": "Vulcano Plot"
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#marginalconditional-effects",
-    "href": "materials/exploring-the-multiverse.html#marginalconditional-effects",
-    "title": "Untitled",
-    "section": "Marginal/Conditional effects",
-    "text": "Marginal/Conditional effects"
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#specification-curve",
-    "href": "materials/exploring-the-multiverse.html#specification-curve",
-    "title": "Untitled",
-    "section": "Specification Curve",
-    "text": "Specification Curve"
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#an-example",
-    "href": "materials/exploring-the-multiverse.html#an-example",
-    "title": "Untitled",
-    "section": "An example…",
-    "text": "An example…\nWith the phd dataset we conducted xx different analyses. In the previous examples, we were focused on the estimated effects and finding patters in the different specifications. Now we plot explore the p values:"
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#we-have-some-significant-scenarios-great",
-    "href": "materials/exploring-the-multiverse.html#we-have-some-significant-scenarios-great",
-    "title": "Untitled",
-    "section": "We have some significant scenarios, Great!",
-    "text": "We have some significant scenarios, Great!"
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#some-of-the-scenarios-are-significant",
-    "href": "materials/exploring-the-multiverse.html#some-of-the-scenarios-are-significant",
-    "title": "Untitled",
-    "section": "Some of the scenarios are significant!",
-    "text": "Some of the scenarios are significant!\nWe have some significant p values. This is a good sign that some of the specifications are detecting a signal.\n\nBut the data are simulated where the coefficient of the focal predictor is 0. Thus all the significant p values are false positives.\n\n\nExploring is dangerous if we do not take the inferential errors into account."
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#inferential-tools",
-    "href": "materials/exploring-the-multiverse.html#inferential-tools",
-    "title": "Untitled",
-    "section": "Inferential Tools",
-    "text": "Inferential Tools\n\nSpecification Curve\nPost-Selection Inference in Multiverse Analysis (PIMA)"
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#specification-curve-1",
-    "href": "materials/exploring-the-multiverse.html#specification-curve-1",
-    "title": "Untitled",
-    "section": "Specification Curve",
-    "text": "Specification Curve"
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#pima",
-    "href": "materials/exploring-the-multiverse.html#pima",
-    "title": "Untitled",
-    "section": "PIMA",
-    "text": "PIMA"
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#intuition-of-the-specification-curve",
-    "href": "materials/exploring-the-multiverse.html#intuition-of-the-specification-curve",
-    "title": "Untitled",
-    "section": "Intuition of the Specification Curve",
-    "text": "Intuition of the Specification Curve"
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#intuition-of-pima",
-    "href": "materials/exploring-the-multiverse.html#intuition-of-pima",
-    "title": "Untitled",
-    "section": "Intuition of PIMA",
-    "text": "Intuition of PIMA"
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#vibration-of-effects",
-    "href": "materials/exploring-the-multiverse.html#vibration-of-effects",
-    "title": "Untitled",
-    "section": "Vibration of Effects",
-    "text": "Vibration of Effects"
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#vulcano-plot-and-vibration-of-effects",
-    "href": "materials/exploring-the-multiverse.html#vulcano-plot-and-vibration-of-effects",
-    "title": "Untitled",
-    "section": "Vulcano Plot and Vibration of Effects",
-    "text": "Vulcano Plot and Vibration of Effects\n\nrelative hazard ratio (or effect size) and relative -log10pvalue"
-  },
-  {
-    "objectID": "materials/exploring-the-multiverse.html#an-example-statistics-and-math-anxiety",
-    "href": "materials/exploring-the-multiverse.html#an-example-statistics-and-math-anxiety",
-    "title": "Untitled",
-    "section": "An example, Statistics and Math Anxiety",
-    "text": "An example, Statistics and Math Anxiety"
+    "objectID": "index.html#packages",
+    "href": "index.html#packages",
+    "title": "multiverseRworkshop",
+    "section": "Packages",
+    "text": "Packages\n\nlivioivil/pima: package for the PIMA inferential framework [under development]\nlivioivil/jointest: the main PIMA dependency. Used to compute the multivariate permutation tests and combining p-values\nspecr: main package for the specification curve analysis\nmultiverse: package to create and execute a multiverse analysis using a complex and flexible tidyverse-style approach."
   }
 ]
