@@ -4,6 +4,9 @@ project:
   render:
     - "*.qmd"
 
+execute:
+  freeze: true
+
 website:
   title: "Multiverse Analysis in R"
   navbar:
@@ -11,7 +14,7 @@ website:
       - href: index.qmd
         text: Home
 
-author: 
+author:
   - name: "Giulia Calignano"
     email: giulia.calignano@unipd.it
     orcid: "0000-0002-2913-8770"
