@@ -7,9 +7,17 @@ suppress-bibliography: true
 
 This website contains the materials for the workshop about the **Multiverse Analysis in R**.
 
+</br>
+<center>
+{{< qrcode https://github.com/psicostat/multiverseRworkshop >}}
+</center>
+</br>
+
 ## Materials
 
-- [A space travel into the multiverse](materials/space-travel-multiverse.qmd)
+- [Introduction to the Multiverse and Pupillometry](materials/multiverse-intro.pdf) {{< fa file-pdf >}}
+    - [OSF code and datasets](https://osf.io/rmptv/)
+- [A space travel into the multiverse](materials/space-travel-multiverse.qmd) {{< fa file-pdf >}}
 
 ## References
 
